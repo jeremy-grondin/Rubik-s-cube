@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraZoom : MonoBehaviour
 {
     [SerializeField]
-    float zoomSpeed;
+    float zoomSpeed = 0;
 
 
     // Update is called once per frame

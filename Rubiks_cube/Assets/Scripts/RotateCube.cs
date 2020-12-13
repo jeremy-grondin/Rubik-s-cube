@@ -5,7 +5,7 @@ using UnityEngine;
 public class RotateCube : MonoBehaviour
 {
     [SerializeField]
-    float speed;
+    float speed = 0;
 
     // Update is called once per frame
     void Update()
