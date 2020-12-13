@@ -5,13 +5,10 @@ using UnityEngine;
 public class Rubikcube : MonoBehaviour
 {
     [SerializeField]
-    int profondeur = 0;
+    int size = 0;
 
     [SerializeField]
     GameObject cube = null;
-
-    [SerializeField]
-    int decalage = 5;
 
     [SerializeField]
     GameObject parent;
@@ -31,21 +28,18 @@ public class Rubikcube : MonoBehaviour
 
         Vector3 pos = Vector3.zero;
 
-        for(int i = 0; i < profondeur; i++)
+        float decal = (size - 1) * -0.5f; 
+        
+        for(int i = 0; i < size; i++)
         {
-            for (int j = 0; j < profondeur; j++)
+            for (int j = 0; j < size; j++)
             {
-                for (int k = 0; k < profondeur; k++)
+                for (int k = 0; k < size; k++)
                 {
-                    Transform temp = Instantiate(cube.transform, pos, Quaternion.identity);
-                    temp.parent = parent.transform;
-                    pos.z += decalage;
+                    Transform temp = Instantiate(cube.transform, parent.transform);
+                    temp.position = new Vector3(decal + i, decal + j, decal + k);
                 }
-                pos.z = 0;
-                pos.y += decalage;
             }
-            pos.x += decalage;
-            pos.y = 0;
         }
     }
 
