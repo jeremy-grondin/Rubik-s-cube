@@ -16,9 +16,16 @@ public class Rubikcube : MonoBehaviour
     [SerializeField]
     List<Material> materials;
 
+    int shuffle;
+
     void Start()
     {
         GenerateCubes();
+        size = PlayerPrefs.GetInt("CubeSize");
+        shuffle = PlayerPrefs.GetInt("Shuffle");
+
+        Debug.Log("Size : " + size);
+        Debug.Log("Shuffle: " + shuffle);
     }
 
     void GenerateCubes()
