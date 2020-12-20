@@ -7,7 +7,10 @@ public class CameraZoom : MonoBehaviour
     [SerializeField]
     float zoomSpeed = 0;
 
-
+    private void Start()
+    {
+        transform.position = new Vector3(0, 0, -PlayerPrefs.GetInt("CubeSize") * 2);
+    }
 
     // Update is called once per frame
     void Update()

@@ -20,7 +20,7 @@ public class UIManager : MonoBehaviour
 
         cubeSizeText = GameObject.FindGameObjectWithTag("ProfondeurText");
         if (cubeSizeText != null)
-            cubeSizeText.GetComponent<Text>().text = "1";
+            cubeSizeText.GetComponent<Text>().text = "2";
         else
             Debug.Log("HMMMMMM");
 

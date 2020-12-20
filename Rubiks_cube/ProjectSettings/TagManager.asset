@@ -10,6 +10,7 @@ TagManager:
   - ShuffleText
   - MainPanel
   - VictoryPanel
+  - RubiksCube
   layers:
   - Default
   - TransparentFX

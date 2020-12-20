@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class RubicksCubeGeneration : MonoBehaviour
+public class RubiksCube : MonoBehaviour
 {
     #region Variables
     [SerializeField]
-    float rotationSpeedCube = 0;
+    float rotationSpeedCube = 200;
     [SerializeField]
-    float rotationSpeedSlice = 0;
+    float rotationSpeedSlice = 220;
     [SerializeField]
     float slerpSliceScale = 5;
     [SerializeField]
@@ -16,9 +17,9 @@ public class RubicksCubeGeneration : MonoBehaviour
     [SerializeField]
     float slerpCubeScale = 1;
     [SerializeField]
-    float minimumMouseOffset = 0;
+    float minimumMouseOffset = 2;
     [SerializeField]
-    int size = 0;
+    int size = 5;
 
     [SerializeField]
     GameObject cube = null;
@@ -65,6 +66,7 @@ public class RubicksCubeGeneration : MonoBehaviour
     #region Generation
     void Start()
     {
+        size = PlayerPrefs.GetInt("CubeSize");
         GenerateCubes();
     }
     void GenerateCubes()
@@ -81,7 +83,7 @@ public class RubicksCubeGeneration : MonoBehaviour
                 for (int k = 0; k < size; k++)
                 {
                     GameObject tempCube = Instantiate(cube, new Vector3(maxOffSet + i, maxOffSet + j, maxOffSet + k), Quaternion.identity, transform);
-                    GenerateFaces(tempCube, i, j, k);  
+                    GenerateFaces(tempCube, i, j, k);
 
                     allCubes.Add(tempCube);
                 }
@@ -96,7 +98,7 @@ public class RubicksCubeGeneration : MonoBehaviour
             pivotsAxisZ.Add(Instantiate(pivot, new Vector3(0, 0, maxOffSet + i), Quaternion.identity, transform));
         }
     }
-    void GenerateFaces(GameObject cubeParent, int i, int j,int k)
+    void GenerateFaces(GameObject cubeParent, int i, int j, int k)
     {
         if (i == 0)
             Instantiate(left, cubeParent.transform);
@@ -166,7 +168,7 @@ public class RubicksCubeGeneration : MonoBehaviour
             currentPivotAxis = Vector3.forward;
             int numberOfTheDepth = (allCubes.IndexOf(selectedCube) % sizeSquared) % size;
 
-            for (int i = sizeSquared - size + numberOfTheDepth; i < allCubes.Count ; i += sizeSquared)
+            for (int i = sizeSquared - size + numberOfTheDepth; i < allCubes.Count; i += sizeSquared)
                 for (int j = 0; j < size; ++j)
                     selectedCubes.Add(allCubes[i - j * size]);
         }
@@ -182,7 +184,7 @@ public class RubicksCubeGeneration : MonoBehaviour
         }
     }
     void SetPivot(bool isRotatingVerticalSlice)
-    {        
+    {
         if (isRotatingVerticalSlice)
         {
             if (selectedCubeNormal == Vector3.left || selectedCubeNormal == Vector3.right)
@@ -207,8 +209,8 @@ public class RubicksCubeGeneration : MonoBehaviour
         Quaternion initailRotaion = currentPivot.transform.localRotation;
         // scale the three euler angle to the nearest 90 degree
         Quaternion finalRotation = Quaternion.Euler(RoundVectorNearestRightAngle(currentPivot.transform.localRotation.eulerAngles));
-        
-        while(waitedTime <= 1)
+
+        while (waitedTime <= 1)
         {
             waitedTime += Time.deltaTime * slerpSliceScale;
             currentPivot.transform.localRotation = Quaternion.Slerp(initailRotaion, finalRotation, waitedTime);
@@ -299,8 +301,8 @@ public class RubicksCubeGeneration : MonoBehaviour
             listOfIndexes.Add(allCubes.IndexOf(cube));
 
         if (numberOfRotation == 1 || numberOfRotation == -3)
-            for(int j = 0; j < size; ++j)
-                for(int k = 0; k < size; ++k)
+            for (int j = 0; j < size; ++j)
+                for (int k = 0; k < size; ++k)
                     allCubes[listOfIndexes[k + j * size]] = selectedCubes[(size - 1 - j) + k * size];
 
         else if (numberOfRotation == 2 || numberOfRotation == -2)
@@ -323,7 +325,7 @@ public class RubicksCubeGeneration : MonoBehaviour
 
     IEnumerator Shuffle(int numberOfShuffle)
     {
-        for(int i = 0; i < numberOfShuffle; ++i)
+        for (int i = 0; i < numberOfShuffle; ++i)
         {
             //get a random direction in 3d space
             Vector3 direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
@@ -335,13 +337,13 @@ public class RubicksCubeGeneration : MonoBehaviour
             selectedCube = hit.collider.gameObject;
             selectedCubeNormal = transform.worldToLocalMatrix * hit.normal;
 
-            
+
             //selectedCube = allCubes[Random.Range(0, allCubes.Count)];
-            StartRotation(Random.Range(0, 2) == 1? true : false);
+            StartRotation(Random.Range(0, 2) == 1 ? true : false);
             rotationOverAll = currentPivotAxis * (Random.Range(1, 4) * 90);
-            yield return StartCoroutine(EndRotationShuffle(currentPivot.transform.localRotation * Quaternion.Euler(rotationOverAll) ) );
+            yield return StartCoroutine(EndRotationShuffle(currentPivot.transform.localRotation * Quaternion.Euler(rotationOverAll)));
         }
-   }
+    }
 
 
     void Update()
@@ -359,14 +361,14 @@ public class RubicksCubeGeneration : MonoBehaviour
                 selectedCubeNormal = transform.worldToLocalMatrix * hit.normal;
                 hasSelectedACube = true;
             }
-            
+
         }
 
 
         //Mouse Left Button Hold
         if (Input.GetMouseButton(0))
         {
-            if(hasSelectedACube)
+            if (hasSelectedACube)
             {
                 mouseDeltaPos += new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0);
 
@@ -377,18 +379,18 @@ public class RubicksCubeGeneration : MonoBehaviour
                     Vector3.Dot(mouseDeltaPos, -Vector3.right) > minimumMouseOffset)
                     StartRotation(false);
             }
-            else if(isRotatingASlice)
+            else if (isRotatingASlice)
             {
                 //rotation * Quat in this order to rotate in Local
                 currentPivot.transform.localRotation = currentPivot.transform.localRotation * Quaternion.Euler(currentPivotAxis * Vector3.Dot(MouseAxis, new Vector3(-Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0f)) * Time.deltaTime * rotationSpeedSlice);
                 //same Vector as used for the Quaternion.Euler but the mouse input X is not reverted for easier use after
-                rotationOverAll += currentPivotAxis * (Vector3.Dot(MouseAxis, new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0f) ) * Time.deltaTime * rotationSpeedSlice);
+                rotationOverAll += currentPivotAxis * (Vector3.Dot(MouseAxis, new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0f)) * Time.deltaTime * rotationSpeedSlice);
             }
         }
 
         //Mouse Right Button Release
         if (Input.GetMouseButtonUp(0) && isRotatingASlice)
-            StartCoroutine( EndRotation());
+            StartCoroutine(EndRotation());
 
         //Mouse Right Button Hold
         //Quat * rotation in this order to rotate in World
@@ -397,7 +399,7 @@ public class RubicksCubeGeneration : MonoBehaviour
                                  * transform.rotation;
 
         //Control the setup to all 6 axis
-        if(!hasSelectedACube && !isRotatingASlice && !isSlerpingASlice && !isSlerpingCube)
+        if (!hasSelectedACube && !isRotatingASlice && !isSlerpingASlice && !isSlerpingCube)
         {
             //Front
             if (Input.GetKeyDown(KeyCode.A))
@@ -428,6 +430,35 @@ public class RubicksCubeGeneration : MonoBehaviour
     }
     #endregion
 
+    public void Front()
+    {
+        StartCoroutine(SetupRotation(Quaternion.Euler(0, 0, 0)));
+    }
+
+    public void Back()
+    {
+        StartCoroutine(SetupRotation(Quaternion.Euler(0, 180, 0)));
+    }
+
+    public void Left()
+    {
+        StartCoroutine(SetupRotation(Quaternion.Euler(0, -90, 0)));
+    }
+
+    public void Right()
+    {
+        StartCoroutine(SetupRotation(Quaternion.Euler(0, 90, 0)));
+    }
+
+    public void Top()
+    {
+        StartCoroutine(SetupRotation(Quaternion.Euler(-90, 0, 0)));
+    }
+
+    public void Bottom()
+    {
+        StartCoroutine(SetupRotation(Quaternion.Euler(90, 0, 0)));
+    }
+
     #endregion
 }
-
