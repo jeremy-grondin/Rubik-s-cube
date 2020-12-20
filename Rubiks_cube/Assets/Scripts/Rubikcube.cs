@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Rubikcube : MonoBehaviour
 {
@@ -16,6 +18,12 @@ public class Rubikcube : MonoBehaviour
     [SerializeField]
     List<Material> materials;
 
+    [SerializeField]
+    GameObject shuffleValueText;
+
+    [SerializeField]
+    GameObject cubeSizeValue;
+
     int shuffle;
 
     void Start()
@@ -24,8 +32,12 @@ public class Rubikcube : MonoBehaviour
         size = PlayerPrefs.GetInt("CubeSize");
         shuffle = PlayerPrefs.GetInt("Shuffle");
 
-        Debug.Log("Size : " + size);
-        Debug.Log("Shuffle: " + shuffle);
+        if(shuffleValueText != null)
+            shuffleValueText.GetComponent<Text>().text = shuffle.ToString();
+        
+        if(cubeSizeValue != null)
+            cubeSizeValue.GetComponent<Text>().text = size.ToString();
+
     }
 
     void GenerateCubes()
@@ -48,6 +60,56 @@ public class Rubikcube : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void Reset()
+    {
+        SceneManager.LoadScene("Main", LoadSceneMode.Single);
+    }
+
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();   
+    }
+
+    public void SaveScene()
+    {
+
+    }
+
+    public void Front()
+    {
+
+    }
+
+    public void Back()
+    {
+
+    }
+
+    public void Left()
+    {
+
+    }
+
+    public void Right()
+    {
+
+    }
+
+    public void Bottom()
+    {
+
+    }
+
+    public void Top()
+    {
+
     }
 
     void Update()

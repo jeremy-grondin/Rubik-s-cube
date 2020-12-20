@@ -8,6 +8,8 @@ TagManager:
   - ProfondeurText
   - ShuffleValue
   - ShuffleText
+  - MainPanel
+  - VictoryPanel
   layers:
   - Default
   - TransparentFX

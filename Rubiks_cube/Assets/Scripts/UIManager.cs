@@ -9,13 +9,25 @@ public class UIManager : MonoBehaviour
     GameObject cubeSizeText;
     GameObject shuffleText;
 
+    [SerializeField]
+    GameObject mainPanel;
+    [SerializeField]
+    GameObject optionPanel;
+
     private void Start()
     {
+
+
         cubeSizeText = GameObject.FindGameObjectWithTag("ProfondeurText");
-        cubeSizeText.GetComponent<Text>().text = "1";
+        if (cubeSizeText != null)
+            cubeSizeText.GetComponent<Text>().text = "1";
+        else
+            Debug.Log("HMMMMMM");
 
         shuffleText = GameObject.FindGameObjectWithTag("ShuffleText");
         shuffleText.GetComponent<Text>().text = "0";
+
+        optionPanel.SetActive(false);
     }
 
     public void UpdateSliderCubeSize()
@@ -28,6 +40,12 @@ public class UIManager : MonoBehaviour
         shuffleText.GetComponent<Text>().text = GameObject.FindGameObjectWithTag("ShuffleValue").GetComponent<Slider>().value.ToString();
     }
 
+    public void DisplayOptionPanel()
+    {
+        mainPanel.SetActive(false);
+        optionPanel.SetActive(true);
+    }
+
     public void LaunchLevel()
     {
         PlayerPrefs.SetInt("CubeSize", (int)GameObject.FindGameObjectWithTag("SliderProfondeur").GetComponent<Slider>().value);
@@ -35,8 +53,25 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
 
+    public void Resume()
+    {
+        
+    }
+    
+    public void GoBack()
+    {
+        mainPanel.SetActive(true);
+        optionPanel.SetActive(false);
+    }
+
     public void CloseGame()
     {
         Application.Quit();
+    }
+
+
+    public void RotateCube()
+    {
+        //TODO make a preview of the rotation of the cube 
     }
 }

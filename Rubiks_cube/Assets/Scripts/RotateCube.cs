@@ -21,3 +21,12 @@ public class RotateCube : MonoBehaviour
     }
 
 }
+
+
+/**
+
+	play -> ouvre un sous menu avec les sliders
+	background sobre
+	image du nom du rubik's cube en haut à droite
+
+*/
