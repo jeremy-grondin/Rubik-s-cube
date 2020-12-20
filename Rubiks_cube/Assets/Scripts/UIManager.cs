@@ -17,10 +17,14 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         cubeSizeText = GameObject.FindGameObjectWithTag("ProfondeurText");
-        cubeSizeText.GetComponent<Text>().text = "2";
+        int cubeSize = PlayerPrefs.GetInt("CubeSize", 2);
+        cubeSizeText.GetComponent<Text>().text = cubeSize.ToString();
+        GameObject.FindGameObjectWithTag("SliderProfondeur").GetComponent<Slider>().value = cubeSize;
 
         shuffleText = GameObject.FindGameObjectWithTag("ShuffleText");
-        shuffleText.GetComponent<Text>().text = "0";
+        int Shuffle = PlayerPrefs.GetInt("Shuffle", 0);
+        shuffleText.GetComponent<Text>().text = Shuffle.ToString();
+        GameObject.FindGameObjectWithTag("ShuffleValue").GetComponent<Slider>().value = Shuffle;
 
         optionPanel.SetActive(false);
     }
