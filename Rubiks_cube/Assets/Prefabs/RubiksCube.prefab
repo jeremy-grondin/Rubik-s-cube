@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1832407423136222193
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1832407423136222192}
+  - component: {fileID: 1832407423136222206}
+  m_Layer: 0
+  m_Name: RubiksCube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1832407423136222192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832407423136222193}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1832407423136222206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832407423136222193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4120449b5cd26cd43b9b635aef21b96e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeedCube: 200
+  rotationSpeedSlice: 200
+  minimumMouseOffset: 2
+  size: 5
+  cube: {fileID: 5543474992576351194, guid: 811e95fbf6aa57442843f53c2d9e787c, type: 3}
+  pivot: {fileID: 6863870272633350173, guid: 1276390669cdf1444926ef6a263cfa92, type: 3}
+  front: {fileID: 5540783105161348492, guid: e49be2ecafaeba24c8e455ede0d8aa0f, type: 3}
+  back: {fileID: 3520757380844948994, guid: f36eefdcf8c31384cb13261bf43fe8c2, type: 3}
+  left: {fileID: 3745869796091193492, guid: 15aff53e41298f94bb8ca90a53b72649, type: 3}
+  right: {fileID: 8564476366160870253, guid: 429c1002e55f4a740948482a2735dc96, type: 3}
+  bottom: {fileID: 4987407076934739427, guid: 5f0ff39115e140b4099f99e68aa3848e, type: 3}
+  top: {fileID: 4547678241532424542, guid: 262f1b103d5e2d6439de379ece14a97f, type: 3}
