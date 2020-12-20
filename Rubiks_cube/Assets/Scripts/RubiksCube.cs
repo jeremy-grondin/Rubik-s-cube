@@ -37,6 +37,10 @@ public class RubiksCube : MonoBehaviour
     GameObject bottom = null;
     [SerializeField]
     GameObject top = null;
+    [SerializeField]
+    GameObject mainPanel = null;
+    [SerializeField]
+    GameObject victoryPanel = null;
 
     List<GameObject> pivotsAxisX = new List<GameObject>();
     List<GameObject> pivotsAxisY = new List<GameObject>();
@@ -47,7 +51,7 @@ public class RubiksCube : MonoBehaviour
     GameObject selectedCube = null;
     GameObject currentPivot = null;
 
-
+    bool gameFinished = false;
     bool hasSelectedACube = false;
     bool isRotatingASlice = false;
     bool isSlerpingASlice = false;
@@ -240,6 +244,9 @@ public class RubiksCube : MonoBehaviour
                 return;
 
         Debug.Log("VICTORY");
+        gameFinished = true;
+        mainPanel.SetActive(false);
+        victoryPanel.SetActive(true);
     }
 
     IEnumerator EndRotationShuffle(Quaternion finalRotation)
@@ -349,6 +356,15 @@ public class RubiksCube : MonoBehaviour
     void Update()
     {
 
+        //Mouse Right Button Hold
+        //Quat * rotation in this order to rotate in World
+        if (Input.GetMouseButton(1))
+            transform.rotation = Quaternion.Euler(new Vector3(Input.GetAxis("Mouse Y"), -Input.GetAxis("Mouse X"), 0) * Time.deltaTime * rotationSpeedCube)
+                                 * transform.rotation;
+
+        if (gameFinished)
+            return;
+
         //Mouse Left Button Press
         if (Input.GetMouseButtonDown(0) && !isSlerpingASlice && !isSlerpingCube)
         {
@@ -392,11 +408,6 @@ public class RubiksCube : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && isRotatingASlice)
             StartCoroutine(EndRotation());
 
-        //Mouse Right Button Hold
-        //Quat * rotation in this order to rotate in World
-        if (Input.GetMouseButton(1))
-            transform.rotation = Quaternion.Euler(new Vector3(Input.GetAxis("Mouse Y"), -Input.GetAxis("Mouse X"), 0) * Time.deltaTime * rotationSpeedCube)
-                                 * transform.rotation;
 
         //Control the setup to all 6 axis
         if (!hasSelectedACube && !isRotatingASlice && !isSlerpingASlice && !isSlerpingCube)

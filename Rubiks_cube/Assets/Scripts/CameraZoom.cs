@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraZoom : MonoBehaviour
 {
     [SerializeField]
-    float zoomSpeed = 0;
+    float zoomSpeed = 100;
 
     private void Start()
     {

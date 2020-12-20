@@ -6,13 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    GameObject cubeSizeText;
-    GameObject shuffleText;
+    GameObject cubeSizeText = null;
+    GameObject shuffleText = null;
 
     [SerializeField]
-    GameObject mainPanel;
+    GameObject mainPanel = null;
     [SerializeField]
-    GameObject optionPanel;
+    GameObject optionPanel = null;
 
     private void Start()
     {
@@ -50,7 +50,7 @@ public class UIManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("CubeSize", (int)GameObject.FindGameObjectWithTag("SliderProfondeur").GetComponent<Slider>().value);
         PlayerPrefs.SetInt("Shuffle", (int)GameObject.FindGameObjectWithTag("ShuffleValue").GetComponent<Slider>().value);
-        SceneManager.LoadScene("Main", LoadSceneMode.Single);
+        SceneManager.LoadScene("Level", LoadSceneMode.Single);
     }
 
     public void Resume()

@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     public void Reset()
     {
-        SceneManager.LoadScene("Main", LoadSceneMode.Single);
+        SceneManager.LoadScene("Level", LoadSceneMode.Single);
     }
 
     public void Quit()

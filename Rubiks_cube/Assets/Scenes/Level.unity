@@ -1647,7 +1647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1946,7 +1946,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7, y: -181}
+  m_AnchoredPosition: {x: -7, y: -176}
   m_SizeDelta: {x: 302.28906, y: 88.671906}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1353376597
@@ -2292,6 +2292,16 @@ PrefabInstance:
       propertyPath: m_TagString
       value: RubiksCube
       objectReference: {fileID: 0}
+    - target: {fileID: 3278157577022203177, guid: 5040c04dbf6e5f648a37739c7f1df1fa,
+        type: 3}
+      propertyPath: mainPanel
+      value: 
+      objectReference: {fileID: 1503993931}
+    - target: {fileID: 3278157577022203177, guid: 5040c04dbf6e5f648a37739c7f1df1fa,
+        type: 3}
+      propertyPath: victoryPanel
+      value: 
+      objectReference: {fileID: 1520637233}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5040c04dbf6e5f648a37739c7f1df1fa, type: 3}
 --- !u!1 &1456502145
