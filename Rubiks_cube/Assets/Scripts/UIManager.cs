@@ -16,13 +16,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-
-
         cubeSizeText = GameObject.FindGameObjectWithTag("ProfondeurText");
-        if (cubeSizeText != null)
-            cubeSizeText.GetComponent<Text>().text = "2";
-        else
-            Debug.Log("HMMMMMM");
+        cubeSizeText.GetComponent<Text>().text = "2";
 
         shuffleText = GameObject.FindGameObjectWithTag("ShuffleText");
         shuffleText.GetComponent<Text>().text = "0";
@@ -55,9 +50,9 @@ public class UIManager : MonoBehaviour
 
     public void Resume()
     {
-        
+        Debug.Log("NOT IMPLEMENTED YET");
     }
-    
+
     public void GoBack()
     {
         mainPanel.SetActive(true);
@@ -69,9 +64,4 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
-
-    public void RotateCube()
-    {
-        //TODO make a preview of the rotation of the cube 
-    }
 }
