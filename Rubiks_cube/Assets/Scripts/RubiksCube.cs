@@ -19,7 +19,7 @@ public class RubiksCube : MonoBehaviour
     [SerializeField]
     float minimumMouseOffset = 2;
     [SerializeField]
-    int size = 5;
+    int size = 0;
 
     [SerializeField]
     GameObject cube = null;
@@ -204,15 +204,13 @@ public class RubiksCube : MonoBehaviour
                 currentPivot = pivotsAxisY[(allCubes.IndexOf(selectedCube) % (size * size)) / size];
         }
     }
-    IEnumerator EndRotation()
+    IEnumerator EndRotation(Quaternion finalRotation, bool needToCheckCubeSolved = true)
     {
         float waitedTime = 0f;
         isRotatingASlice = false;
         isSlerpingASlice = true;
 
         Quaternion initailRotaion = currentPivot.transform.localRotation;
-        // scale the three euler angle to the nearest 90 degree
-        Quaternion finalRotation = Quaternion.Euler(RoundVectorNearestRightAngle(currentPivot.transform.localRotation.eulerAngles));
 
         while (waitedTime <= 1)
         {
@@ -230,68 +228,15 @@ public class RubiksCube : MonoBehaviour
         selectedCube = null;
         selectedCubes.Clear();
         rotationOverAll = Vector3.zero;
+        selectedCubeNormal = Vector3.zero;
         CheckIfSolved();
     }
-
-    void CheckIfSolved()
+    Vector3 RoundVectorNearestRightAngle(Vector3 vector)
     {
-        //A Rubick's cube is solved if all the cubes composing it have the same Rotation
-        Quaternion rotationToHave = allCubes[0].transform.rotation;
-
-        //we can start from i = 1 as allcubes[0] will always have the same rotation as himself
-        for (int i = 1; i < allCubes.Count; ++i)
-            if (allCubes[i].transform.rotation != rotationToHave)
-                return;
-
-        Debug.Log("VICTORY");
-        gameFinished = true;
-        mainPanel.SetActive(false);
-        victoryPanel.SetActive(true);
+        return new Vector3(Mathf.Round(vector.x / 90) * 90,
+                           Mathf.Round(vector.y / 90) * 90,
+                           Mathf.Round(vector.z / 90) * 90);
     }
-
-    IEnumerator EndRotationShuffle(Quaternion finalRotation)
-    {
-        float waitedTime = 0f;
-        isRotatingASlice = false;
-        isSlerpingASlice = true;
-
-        Quaternion initailRotaion = currentPivot.transform.localRotation;
-
-        while (waitedTime <= 1)
-        {
-            waitedTime += Time.deltaTime * slerpSliceShuffleScale;
-            currentPivot.transform.localRotation = Quaternion.Slerp(initailRotaion, finalRotation, waitedTime);
-            yield return null;
-        }
-
-        foreach (GameObject cube in selectedCubes)
-            cube.transform.parent = transform;
-
-        ReajustArrayMap();
-        isSlerpingASlice = false;
-        currentPivot = null;
-        selectedCube = null;
-        selectedCubes.Clear();
-        rotationOverAll = Vector3.zero;
-    }
-
-    IEnumerator SetupRotation(Quaternion finalRotation)
-    {
-        float waitedTime = 0f;
-        isSlerpingCube = true;
-
-        Quaternion initailRotaion = transform.rotation;
-
-        while (waitedTime <= 1)
-        {
-            waitedTime += Time.deltaTime * slerpCubeScale;
-            transform.rotation = Quaternion.Slerp(initailRotaion, finalRotation, waitedTime);
-            yield return null;
-        }
-
-        isSlerpingCube = false;
-    }
-
     void ReajustArrayMap()
     {
         //RoundUp the Rotation OverAll to clamp all component [0 ; 360]
@@ -322,36 +267,90 @@ public class RubiksCube : MonoBehaviour
                 for (int k = 0; k < size; ++k)
                     allCubes[listOfIndexes[k + j * size]] = selectedCubes[j + size * (size - 1 - k)];
     }
-    Vector3 RoundVectorNearestRightAngle(Vector3 vector)
+    void CheckIfSolved()
     {
-        return new Vector3(Mathf.Round(vector.x / 90) * 90,
-                           Mathf.Round(vector.y / 90) * 90,
-                           Mathf.Round(vector.z / 90) * 90);
+        //A Rubick's cube is solved if all the cubes composing it have the same Rotation
+        Quaternion rotationToHave = allCubes[0].transform.rotation;
+
+        //we can start from i = 1 as allcubes[0] will always have the same rotation as himself
+        for (int i = 1; i < allCubes.Count; ++i)
+            if (allCubes[i].transform.rotation != rotationToHave)
+                return;
+
+        gameFinished = true;
+        mainPanel.SetActive(false);
+        victoryPanel.SetActive(true);
     }
 
+    IEnumerator SetupRotation(Quaternion finalRotation)
+    {
+        float waitedTime = 0f;
+        isSlerpingCube = true;
 
+        Quaternion initailRotaion = transform.rotation;
+
+        while (waitedTime <= 1)
+        {
+            waitedTime += Time.deltaTime * slerpCubeScale;
+            transform.rotation = Quaternion.Slerp(initailRotaion, finalRotation, waitedTime);
+            yield return null;
+        }
+
+        isSlerpingCube = false;
+    }
     IEnumerator Shuffle(int numberOfShuffle)
     {
         for (int i = 0; i < numberOfShuffle; ++i)
         {
-            //get a random direction in 3d space
-            Vector3 direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-            Vector3 randomCameraPos = transform.position + direction * 100;
+            int pivotAxis = Random.Range(0, 3);
+            bool isRotatingVerticalSlice = false;
 
-            RaycastHit hit;
-            Ray ray = new Ray(randomCameraPos, -direction);
-            Physics.Raycast(ray, out hit, 200);
-            selectedCube = hit.collider.gameObject;
-            selectedCubeNormal = transform.worldToLocalMatrix * hit.normal;
+            List<GameObject> pivotsAxisList = new List<GameObject>();
 
+            if (pivotAxis == 0)
+            {
+                isRotatingVerticalSlice = true;
+                pivotsAxisList = pivotsAxisX;
+            }
+            else if (pivotAxis == 1)
+            {
+                isRotatingVerticalSlice = false;
+                pivotsAxisList = pivotsAxisY;
+            }
+            else if (pivotAxis == 2)
+            {
+                pivotsAxisList = pivotsAxisZ;
+                isRotatingVerticalSlice = Random.Range(0, 2) == 1 ? true : false;
+                selectedCubeNormal = isRotatingVerticalSlice ? Vector3.left : Vector3.up;
+            }
 
-            //selectedCube = allCubes[Random.Range(0, allCubes.Count)];
-            StartRotation(Random.Range(0, 2) == 1 ? true : false);
+            int numberInAxisList = Random.Range(0, size);
+            currentPivot = pivotsAxisList[numberInAxisList];
+
+            if (pivotAxis == 0)
+                selectedCube = allCubes[(size * size) * numberInAxisList];
+            else if (pivotAxis == 1)
+                selectedCube = allCubes[size * numberInAxisList];
+            else if (pivotAxis == 2)
+                selectedCube = allCubes[numberInAxisList];
+
+            Debug.Log(pivotAxis);
+            Debug.Log(isRotatingVerticalSlice);
+            Debug.Log(numberInAxisList);
+            Debug.Log(allCubes.IndexOf(selectedCube));
+
+            if (isRotatingVerticalSlice)
+                SetVerticalSlices();
+            else
+                SetHorizontalSlices();
+
+            foreach (GameObject cube in selectedCubes)
+                cube.transform.parent = currentPivot.transform;
+
             rotationOverAll = currentPivotAxis * (Random.Range(1, 4) * 90);
-            yield return StartCoroutine(EndRotationShuffle(currentPivot.transform.localRotation * Quaternion.Euler(rotationOverAll)));
+            yield return StartCoroutine(EndRotation(currentPivot.transform.localRotation * Quaternion.Euler(rotationOverAll), false));
         }
     }
-
 
     void Update()
     {
@@ -362,6 +361,7 @@ public class RubiksCube : MonoBehaviour
             transform.rotation = Quaternion.Euler(new Vector3(Input.GetAxis("Mouse Y"), -Input.GetAxis("Mouse X"), 0) * Time.deltaTime * rotationSpeedCube)
                                  * transform.rotation;
 
+        //when game finished the player can still rotate the rubick's cube overall
         if (gameFinished)
             return;
 
@@ -406,7 +406,7 @@ public class RubiksCube : MonoBehaviour
 
         //Mouse Right Button Release
         if (Input.GetMouseButtonUp(0) && isRotatingASlice)
-            StartCoroutine(EndRotation());
+            StartCoroutine(EndRotation(Quaternion.Euler(RoundVectorNearestRightAngle(currentPivot.transform.localRotation.eulerAngles))));
 
 
         //Control the setup to all 6 axis
@@ -435,12 +435,14 @@ public class RubiksCube : MonoBehaviour
 
             //Shuffle
             if (Input.GetKeyDown(KeyCode.S))
-                StartCoroutine(Shuffle(5));
+                StartCoroutine(Shuffle(1));
         }
 
     }
+
     #endregion
 
+    #region Setup Rotation
     public void Front()
     {
         StartCoroutine(SetupRotation(Quaternion.Euler(0, 0, 0)));
@@ -470,6 +472,7 @@ public class RubiksCube : MonoBehaviour
     {
         StartCoroutine(SetupRotation(Quaternion.Euler(90, 0, 0)));
     }
+    #endregion
 
     #endregion
 }
